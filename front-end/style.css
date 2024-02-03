@@ -1,0 +1,21 @@
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+
+  height: 100vh;
+  width: 100vw;
+
+  display: grid;
+  grid-template-columns: 3fr 5fr;
+  grid-template-rows: 100vh;
+}
