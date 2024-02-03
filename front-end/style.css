@@ -18,14 +18,14 @@ body {
   width: 100vw;
 
   display: grid;
-  grid-template-columns: 3fr 5fr;
+  grid-template-columns: 3fr 6fr;
   grid-template-rows: 100vh;
 
   font-family: "Inter";
 }
 
 .dashboard {
-  background-color: rgb(26, 26, 26);
+  background-color: #242424;
   padding-left: 10%;
   padding-right: 10%;
 }
@@ -36,4 +36,29 @@ body {
 
 h1 {
   color: rgb(216, 216, 216);
+  font-size: 36px;
+  font-weight: 600;
+
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.health-container {
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-columns: 1fr;
+  gap: 30px;
+}
+
+.soldier-health-overview {
+  height: 150px;
+  width: 500px;
+
+  border: 2px solid white;
+  border-radius: 8px;
+}
+
+.icon {
+  height: 24px;
+  width: 24px;
 }
