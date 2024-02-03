@@ -1,23 +1,7 @@
+const markers = new Map();
 var soldiers = [];
-var markers = [];
+
 var iter = 0;
-
-const initPositions = [{
-    lat: 28.51231,
-    lng: 77.40548
-}];
-
-var add = 0;
-
-function removeAllMarkers() {
-    markers.forEach((marker) => {
-        console.log(marker.position);
-        marker.position = null}
-    );
-    soldiers = [];
-    markers = [];
-    add = add + 0.001
-}
 
 async function initMap() {
 
@@ -28,8 +12,6 @@ async function initMap() {
         lat: 28.50231,
         lng: 77.40548
     };
-    
-    soldiers = initPositions;
 
     var map = new Map(
         document.getElementById("map"), {
@@ -38,18 +20,28 @@ async function initMap() {
         mapId: "4504f8b37365c3d0"
     });
 
-
     const interval = setInterval(function() {
-        removeAllMarkers();
+        //TODO: set soldiers to data
+
         soldiers.push({
-            lat: (28.50231+0.0001 * iter),
-            lng: 77.40548
+            pId: 1,
+            position: {
+                lat: (28.51231 + 0.0001 * iter),
+                lng: 77.40548
+            }
+        })
+
+        soldiers.forEach((soldier) => {
+            if(markers.has(soldier.pId)) {
+                markers.get(soldier.pId).position = new google.maps.LatLng(soldier.position.lat, soldier.position.lng);
+            }
+            else {
+                markers.set(soldier.pId, new AdvancedMarkerElement({
+                    position: soldier.pos,
+                    map
+                }));
+            }
         });
-        markers = soldiers.map((soldier) => new AdvancedMarkerElement({
-            position: soldier,
-            map
-          }));
         iter++;
-        map.center = soldiers[soldiers[soldiers.size-1]];
-    }, 50);
+    }, 10);
 }
