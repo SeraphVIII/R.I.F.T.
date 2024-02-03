@@ -45,9 +45,15 @@
         </div>
       </div>
     </div>
-    <div class="map-container"></div>
+      
+    <div id="map"></div>
+ 
+    <!--Add a script by google -->
+    <script src=
+      "https://maps.googleapis.com/maps/api/js?key=AIzaSyDg1rVDK09lCGaGW_tX3i0bUZXtjHLiPYk&callback=initMap&libraries=&v=weekly"
+    async>
+    </script>
 
-    </div>
-    <script src="./main.js" type="module"></script>
+    <script src="./main.js" defer></script>
   </body>
 </html>
