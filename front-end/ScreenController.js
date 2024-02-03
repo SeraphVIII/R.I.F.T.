@@ -2,9 +2,7 @@ export default class ScreenController {
   renderHealthInfo(people) {
     const healthContainer = document.querySelector(".health-container");
     healthContainer.innerHTML = "";
-    console.log(people);
     people.forEach((person) => {
-      console.log(person);
       const newSoldierHealthInterview = document.createElement("div");
       newSoldierHealthInterview.innerHTML = `<div class="soldier-health-overview">
         <div class="person-name">${person.name}</div>
