@@ -15,8 +15,15 @@
       <div class="soldier-health-overview"></div>   
       <div class="soldier-health-overview"></div>
     </div>
-    <div class="map-container">
-      <img src = "https://maps.googleapis.com/maps/api/staticmap?size=800x580&scale=2&markers=color:blue%7Clabel:Warrior%7C11211%%7C11222&key=AIzaSyDg1rVDK09lCGaGW_tX3i0bUZXtjHLiPYk">
-    </div>
+      
+    <div id="map"></div>
+ 
+    <!--Add a script by google -->
+    <script src=
+      "https://maps.googleapis.com/maps/api/js?key=AIzaSyDg1rVDK09lCGaGW_tX3i0bUZXtjHLiPYk&callback=initMap&libraries=&v=weekly"
+    async>
+    </script>
+
+    <script src="./main.js" defer></script>
   </body>
 </html>
