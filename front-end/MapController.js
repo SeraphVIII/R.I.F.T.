@@ -3,19 +3,6 @@ var soldiers = [];
 
 var iter = 0;
 
-const initPositions = [{
-    pId: 1,
-    position:{
-        lat: 28.51231,
-        lng: 77.40548
-    }
-}];
-
-function removeAllMarkers() {
-    markers.forEach((marker) => {marker.position = null});
-    soldiers = [];
-}
-
 async function initMap() {
 
     const { Map } = await google.maps.importLibrary("maps");
@@ -25,8 +12,6 @@ async function initMap() {
         lat: 28.50231,
         lng: 77.40548
     };
-    
-    soldiers = initPositions;
 
     var map = new Map(
         document.getElementById("map"), {
@@ -36,7 +21,6 @@ async function initMap() {
     });
 
     const interval = setInterval(function() {
-        removeAllMarkers();
         //TODO: set soldiers to data
 
         soldiers.push({
