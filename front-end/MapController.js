@@ -20,7 +20,7 @@ async function initMap() {
 
   async function getData() {
     const url =
-      "https://82b8-2a0c-5bc0-40-2e31-f8b2-a379-f82f-e798.ngrok-free.app/api/data";
+      "https://808e-2a0c-5bc0-40-2e31-a044-3f93-5d0-bfad.ngrok-free.app/api/data";
     const response = await fetch(url, {
       mode: "cors",
       headers: {
@@ -46,12 +46,44 @@ async function initMap() {
           soldier.position.lat,
           soldier.position.lng
         );
+
+        const status = document.querySelector(
+          `#pid_${soldier.pid} .person-status`
+        ).textContent;
+
+        if (status == "normal") {
+          const soldierImage = document.createElement("img");
+          soldierImage.src = "./assets/soldier-green.svg";
+          markers.get(soldier.pid).content = soldierImage;
+        }
+
+        if (status == "moderate") {
+          const soldierImage = document.createElement("img");
+          soldierImage.src = "./assets/soldier-orange.svg";
+          markers.get(soldier.pid).content = soldierImage;
+        }
+
+        if (status == "critical") {
+          const soldierImage = document.createElement("img");
+          soldierImage.src = "./assets/soldier-red.svg";
+          markers.get(soldier.pid).content = soldierImage;
+        }
       } else {
+        const soldierImage = document.createElement("img");
+        soldierImage.src = "./assets/soldier-blue.svg";
+
         const marker = new AdvancedMarkerElement({
           position: soldier.pos,
           title: soldier.name,
+          content: soldierImage,
           map,
         });
+
+        const markerInfoWindow = new InfoWindow();
+        markerInfoWindow.setContent(marker.title);
+        markerInfoWindow.open({ anchor: marker, map: marker.map });
+
+        // infoWindow.open(marker.map, marker);
         marker.addListener("click", ({ domEvent, latLng }) => {
           const { target } = domEvent;
           infoWindow.close();
@@ -69,5 +101,5 @@ async function initMap() {
         markers.set(soldier.pid, marker);
       }
     });
-  }, 1000);
+  }, 50);
 }
