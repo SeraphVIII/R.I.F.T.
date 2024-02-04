@@ -3,7 +3,9 @@ var soldiers = [];
 
 async function initMap() {
   const { Map, InfoWindow } = await google.maps.importLibrary("maps");
-  const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
+  const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary(
+    "marker"
+  );
 
   const centerPos = {
     lat: 51.5072,
@@ -18,7 +20,7 @@ async function initMap() {
 
   async function getData() {
     const url =
-      "https://5200-2a0c-5bc0-40-2e31-f8b2-a379-f82f-e798.ngrok-free.app/api/data";
+      "https://2a61-2a0c-5bc0-40-2e31-f8b2-a379-f82f-e798.ngrok-free.app/api/data";
     const response = await fetch(url, {
       mode: "cors",
       headers: {
@@ -39,26 +41,33 @@ async function initMap() {
     soldiers = await getData();
 
     soldiers.people.forEach((soldier) => {
-      if(markers.has(soldier.pid)) {
-          markers.get(soldier.pid).position = new google.maps.LatLng(soldier.position.lat, soldier.position.lng);
-      }
-      else {
+      if (markers.has(soldier.pid)) {
+        markers.get(soldier.pid).position = new google.maps.LatLng(
+          soldier.position.lat,
+          soldier.position.lng
+        );
+      } else {
         const marker = new AdvancedMarkerElement({
           position: soldier.pos,
           title: soldier.name,
-          map
-      });
-      marker.addListener("click", ({domEvent, latLng}) => {
-        const { target } = domEvent;
-        infoWindow.close();
-        infoWindow.setContent(marker.title);
-        const personElem = document.getElementById("pid_" + soldier.pid);
-        personElem.classList.add("active");
-        console.log(personElem);
-        infoWindow.open(marker.map, marker);
-      })
+          map,
+        });
+        marker.addListener("click", ({ domEvent, latLng }) => {
+          const { target } = domEvent;
+          infoWindow.close();
+          infoWindow.setContent(marker.title);
+          const prevPinned = document.querySelector(
+            ".soldier-health-overview.active"
+          );
+          prevPinned?.classList.remove("active");
+          if (prevPinned?.id != `pid_${soldier.pid}`) {
+            const personElem = document.getElementById("pid_" + soldier.pid);
+            personElem.classList.add("active");
+          }
+          infoWindow.open(marker.map, marker);
+        });
         markers.set(soldier.pid, marker);
       }
-  });
-  }, 10);
+    });
+  }, 1000);
 }
