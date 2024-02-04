@@ -42,7 +42,7 @@ function generateData() {
 
 update();
 
-const interval = setInterval(update, 1000);
+const interval = setInterval(update, 100);
 
 function update(time) {
   fetchController
