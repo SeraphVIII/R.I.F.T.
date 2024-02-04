@@ -1,26 +1,32 @@
 const WebSocket = require("ws")
 const fetch = require("node-fetch-commonjs")
 const express = require('express');
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
 
 // https://5200-2a0c-5bc0-40-2e31-f8b2-a379-f82f-e798.ngrok-free.app/api/data
 app.use(cors());
+app.use(bodyParser.json());
+class DataPoint {
+    constructor(heart_rate, lat, lng, timestamp) {
+      this.heart_rate = heart_rate;
+      this.lat = lat;
+      this.lng = lng;
+      this.timestamp = timestamp
+    }
+}
 
 class Person {
     
-    constructor(name, lat, lng, personID, standing_bpm_mean, standing_bpm_std, running_bpm_mean, running_bpm_std, time_stamp) {
+    constructor(current_bpm, name, lat, lng, personID, standing_bpm_mean, standing_bpm_std, running_bpm_mean, running_bpm_std, time_stamp) {
         this.name = name;
         this.personID = personID;
         this.standing_bpm_mean = standing_bpm_mean;
         this.standing_bpm_std = standing_bpm_std;
         this.running_bpm_mean = running_bpm_mean;
         this.running_bpm_std = running_bpm_std;
-        this.time_stamp = time_stamp
-        this.all_lat = [lat];
-        this.all_lng = [lng];
-        // this.initial_pos = initial_pos
-        // this.heart_rate = heart_rate
+        this.dataPoints = [new DataPoint(current_bpm, lat, lng, time_stamp)];
     }
     
     addDataPoint(dataPoint) {
@@ -28,30 +34,12 @@ class Person {
     }
     
     isRunning() {
-        const data = this.dataPoints
         const MAX_VALUES_TO_CONSIDER = 20; // Maximum number of values to consider
-        const MIN_VALUES_FOR_RUNNING = 10; // Minimum number of values required to determine running
-    
-        // Check if there are enough data points to determine running status
-        if (data.length < MIN_VALUES_FOR_RUNNING) {
-            return false; // Not enough data to determine running status
+        var totalSpeed = 0;
+        for (let i = Math.max(this.dataPoints.length - MAX_VALUES_TO_CONSIDER, 1); i < this.dataPoints.length; i++) {
+            totalSpeed += calculateDistance(this.dataPoints[i]["lat"], this.dataPoints[i]["lng", this.dataPoints[i - 1]["lat"], this.dataPoints[i - 1]["lng"]])
         }
-    
-        // Consider only the last 20 values or maximum available values, whichever is smaller
-        const valuesToConsider = data.slice(-Math.min(data.length, MAX_VALUES_TO_CONSIDER));
-    
-        // Calculate average speed between consecutive points
-        const speeds = valuesToConsider.map((point, index, array) => {
-            if (index === 0) return 0; // Speed at the first point is 0
-            const prevPoint = array[index - 1];
-            const distance = calculateDistance(prevPoint.latitude, prevPoint.longitude, point.latitude, point.longitude);
-            const timeDiff = point.timestamp - prevPoint.timestamp; // Time difference in milliseconds
-            const speed = distance / timeDiff; // Speed in distance per millisecond
-            return speed;
-        });
-    
-        // Calculate average speed
-        const averageSpeed = speeds.reduce((acc, curr) => acc + curr, 0) / speeds.length;
+        const averageSpeed = totalSpeed / Math.min(MAX_VALUES_TO_CONSIDER, this.dataPoints.length - 1);
     
         // If average speed is above a threshold, consider the person as running
         const runningThreshold = 5; // Adjust this threshold according to your needs
@@ -63,11 +51,24 @@ class Person {
     // You can add more methods or functionality as needed
 }
 
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Radius of the earth in kilometers
+    const dLat = deg2rad(lat2 - lat1);
+    const dLon = deg2rad(lon2 - lon1);
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; // Distance in kilometers
+    return distance;
+}
+
 let all = [
-    new Person("Person 1", 51.507382614115976, -0.19503585266537363, 1, 67, 20, 101, 28, 0),
-    new Person("Person 2", 51.502081198314876, -0.1697567115948215, 2, 72, 15, 120, 30, 0),
-    new Person("Person 3", 51.503527100156255, -0.1882785520950669, 3, 85, 30, 130, 40, 0),
-    new Person("Person 4", 51.49686680763736, -0.18018386912022025, 4, 70, 22, 106, 35, 0)
+    new Person(20, "Person 1", 51.507382614115976, -0.19503585266537363, 1, 67, 20, 101, 28, 0),
+    new Person(72, "Person 2", 51.502081198314876, -0.1697567115948215, 2, 72, 15, 120, 30, 0),
+    new Person(160, "Person 3", 51.503527100156255, -0.1882785520950669, 3, 85, 30, 130, 40, 0),
+    new Person(75, "Person 4", 51.49686680763736, -0.18018386912022025, 4, 70, 22, 106, 35, 0)
   ];
 
 let people = [
@@ -79,10 +80,10 @@ let people = [
       "factorTime": 1,
       "name": "Person 1",
       "status": "Critical",
-      "standing_bpm_mean": Math.floor(Math.random() * 50) + 50,
-      "standing_bpm_std": Math.random() * 10,
-      "active_bpm_mean": Math.floor(Math.random() * 20) + 70,
-      "active_bpm_std": Math.random() * 5
+      "standing_bpm_mean": 67,
+      "standing_bpm_std": 20,
+      "active_bpm_mean": 101,
+      "active_bpm_std": 28
     },
     {
       "heart_rate": 72,
@@ -92,23 +93,23 @@ let people = [
       "factorTime": 1.5,
       "name": "Person 2",
       "status": "Normal",
-      "standing_bpm_mean": Math.floor(Math.random() * 50) + 50,
-      "standing_bpm_std": Math.random() * 10,
-      "active_bpm_mean": Math.floor(Math.random() * 20) + 70,
-      "active_bpm_std": Math.random() * 5
+      "standing_bpm_mean": 72,
+      "standing_bpm_std": 15,
+      "active_bpm_mean": 120,
+      "active_bpm_std": 30
     },
     {
-      "heart_rate": 92,
+      "heart_rate": 160,
       "position": {"lat": 51.503527100156255, "lng": -0.1882785520950669},
       "pid": 3,
       "sizeRectangle": 0.008,
       "factorTime": 0.3,
       "name": "Person 3",
       "status": "Moderate",
-      "standing_bpm_mean": Math.floor(Math.random() * 50) + 50,
-      "standing_bpm_std": Math.random() * 10,
-      "active_bpm_mean": Math.floor(Math.random() * 20) + 70,
-      "active_bpm_std": Math.random() * 5
+      "standing_bpm_mean": 85,
+      "standing_bpm_std": 30,
+      "active_bpm_mean": 130,
+      "active_bpm_std": 40
     },
     {
       "heart_rate": 75,
@@ -118,10 +119,10 @@ let people = [
       "factorTime": 0.5,
       "name": "Person 4",
       "status": "Normal",
-      "standing_bpm_mean": Math.floor(Math.random() * 50) + 50,
-      "standing_bpm_std": Math.random() * 10,
-      "active_bpm_mean": Math.floor(Math.random() * 20) + 70,
-      "active_bpm_std": Math.random() * 5
+      "standing_bpm_mean": 72,
+      "standing_bpm_std": 22,
+      "active_bpm_mean": 106,
+      "active_bpm_std": 35
     }
   ];
 
@@ -173,9 +174,19 @@ function update_counter() {
     periodCounterGlobal++;
     periodCounterGlobal = periodCounterGlobal % period
 }
+
+let changing_hr = 78
+
+app.post('/api/hr', (req, res) =>{
+    console.log(req.body["hr"])
+    changing_hr = req.body["hr"]
+
+    res.json({"OK": 200})
+
+})
 // Define a route to handle GET requests
 app.get('/api/data', (req, res) => {
-    console.log("Request");
+    //console.log("Request");
     
 
     let peopleMod = []
@@ -186,31 +197,32 @@ app.get('/api/data', (req, res) => {
         "position": person["position"],
         "pid": person["pid"],
         "name":  person["name"],
-        "status": person["status"]
+        "status": getStatus(all[0], hr)
     }
+    all[0].addDataPoint(new DataPoint(hr, person["position"]["lat"], person["position"]["lng"], total_program_time))
     peopleMod.push(newPerson)
 
 
     for (let i = 1; i < people.length; i++) {
-
-        
         person = people[i]
+        if (i == people.length -1 ) {
+            hr = changing_hr
+        } else {
+            hr = heart_rate_mod(person["heart_rate"])
+
+        }
         const newPerson = {
-            "heart_rate": heart_rate_mod(person["heart_rate"]),
+            "heart_rate": hr,
             "position": getRectanglePosition(person["position"]["lat"], person["position"]["lng"],
              person["sizeRectangle"], person["factorTime"]),
             // "position": position_mod(person["position"]),
             "pid": person["pid"],
             "name":  person["name"],
-            "status": getStatus(person)
+            "status": getStatus(all[0], hr)
         }
-        //all[i].addDataPoint(new )
+        all[i].addDataPoint(new DataPoint(hr, newPerson["position"]["lat"], newPerson["position"]["lng"], total_program_time))
         peopleMod.push(newPerson)
     }
-    
-    // peopleMod = getArrayOfPeople(person, arrayPointer)
-
-
     
     // Process the request and send back some data
     res.json({
@@ -344,18 +356,21 @@ function getRectanglePosition(lat, lng, size, factorTime) {
 }
 
 function getRunning(person) {
-    return false
+    return person.isRunning()
 }
 
-function getStatus(person) {
+function getStatus(person, heartRate) {
         const runningOrNot = getRunning(person)
-
-        heartRate = person["heart_rate"]
     
-        rest_bpm_mean = person["resting_bpm_mean"]
-        rest_bpm_std = person["resting_bpm_std"]
-        active_bpm_mean = person["active_bpm_mean"]
-        active_bpm_std = person["active_bpm_std"]
+        rest_bpm_mean = person.standing_bpm_mean
+        rest_bpm_std = person.standing_bpm_std
+        active_bpm_mean = person.running_bpm_mean
+        active_bpm_std = person.running_bpm_std
+        // console.log(rest_bpm_mean)
+        // console.log(rest_bpm_std)
+        // console.log(active_bpm_mean)
+        // console.log(active_bpm_std)
+        // console.log(runningOrNot)
 
         if (heartRate < 0.5) {
             return "Dead";
@@ -401,16 +416,6 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 function deg2rad(deg) {
     return deg * (Math.PI / 180);
 }
-
-class DataPoint {
-    constructor(heart_rate, lat, lng, timestamp) {
-      this.heart_rate = heart_rate;
-      this.lat = lat;
-      this.lng = lng;
-      this.timestamp = stamp
-    }
-}
-
 
 
 getToken().then(token => initWS(token))
