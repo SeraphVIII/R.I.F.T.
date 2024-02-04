@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/activity_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        android:backgroundTint="#000000"
+        android:foregroundGravity="fill"
+        android:keepScreenOn="true"
+        android:foregroundTint="#000000"
+        tools:context=".MainActivity">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="352dp"
+            android:layout_height="66dp"
+            android:src="@drawable/buttons_container"
+            app:layout_constraintBottom_toTopOf="@+id/imageView8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.491"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView4"
+            app:layout_constraintVertical_bias="0.069" />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="352dp"
+            android:layout_height="66dp"
+            android:src="@drawable/buttons_container"
+            app:layout_constraintBottom_toTopOf="@+id/imageView8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.491"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView2"
+            app:layout_constraintVertical_bias="0.057" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="352dp"
+            android:layout_height="66dp"
+            android:src="@drawable/buttons_container"
+            app:layout_constraintBottom_toTopOf="@+id/imageView8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.491"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView9"
+            app:layout_constraintVertical_bias="0.032" />
+
+        <ImageView
+            android:id="@+id/imageView9"
+            android:layout_width="352dp"
+            android:layout_height="66dp"
+            android:layout_marginTop="72dp"
+            android:backgroundTint="#972B2B"
+            android:src="@drawable/buttons_container"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.491"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView8"
+            android:layout_width="238dp"
+            android:layout_height="87dp"
+            android:layout_marginBottom="36dp"
+            android:src="@drawable/terra_logo_dark_cropped"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.49"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/wearos"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:background="@drawable/button_design"
+            android:backgroundTint="@android:color/white"
+            android:text="Wear Os"
+            android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#000000"
+            android:textIsSelectable="true"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView9"
+            app:layout_constraintEnd_toEndOf="@+id/imageView9"
+            app:layout_constraintHorizontal_bias="0.125"
+            app:layout_constraintStart_toStartOf="@+id/imageView9"
+            app:layout_constraintTop_toTopOf="@+id/imageView9" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/sensor"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:background="@drawable/button_design"
+            android:backgroundTint="@color/white"
+            android:text="Sensor"
+            android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#000000"
+            android:textIsSelectable="true"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView4"
+            app:layout_constraintEnd_toEndOf="@+id/imageView4"
+            app:layout_constraintHorizontal_bias="0.125"
+            app:layout_constraintStart_toStartOf="@+id/imageView4"
+            app:layout_constraintTop_toTopOf="@+id/imageView4" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/ant"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:background="@drawable/button_design"
+            android:backgroundTint="@color/white"
+            android:text="Ant+"
+            android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#000000"
+            android:textIsSelectable="true"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+            app:layout_constraintEnd_toEndOf="@+id/imageView3"
+            app:layout_constraintHorizontal_bias="0.125"
+            app:layout_constraintStart_toStartOf="@+id/imageView3"
+            app:layout_constraintTop_toTopOf="@+id/imageView3"
+            app:layout_constraintVertical_bias="0.437" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/ble"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:background="@drawable/button_design"
+            android:backgroundTint="@android:color/white"
+            android:text="BLE"
+            android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#000000"
+            android:textIsSelectable="true"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:iconTint="#F4EFEF"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+            app:layout_constraintEnd_toEndOf="@+id/imageView2"
+            app:layout_constraintHorizontal_bias="0.125"
+            app:layout_constraintStart_toStartOf="@+id/imageView2"
+            app:layout_constraintTop_toTopOf="@+id/imageView2" />
+
+        <Switch
+            android:id="@+id/streamwOS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="On"
+            android:textColor="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView9"
+            app:layout_constraintEnd_toEndOf="@+id/imageView9"
+            app:layout_constraintStart_toEndOf="@+id/wearos"
+            app:layout_constraintTop_toTopOf="@+id/imageView9" />
+
+        <Switch
+            android:id="@+id/streamBLE"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="On"
+            android:textColor="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+            app:layout_constraintEnd_toEndOf="@+id/imageView2"
+            app:layout_constraintStart_toEndOf="@+id/ble"
+            app:layout_constraintTop_toTopOf="@+id/imageView2" />
+
+        <Switch
+            android:id="@+id/streamSensor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="On"
+            android:textColor="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView4"
+            app:layout_constraintEnd_toEndOf="@+id/imageView4"
+            app:layout_constraintStart_toEndOf="@+id/sensor"
+            app:layout_constraintTop_toTopOf="@+id/imageView4" />
+
+        <Switch
+            android:id="@+id/antSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="On"
+            android:textColor="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+            app:layout_constraintEnd_toEndOf="@+id/imageView3"
+            app:layout_constraintStart_toEndOf="@+id/ant"
+            app:layout_constraintTop_toTopOf="@+id/imageView3" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>>
+</layout>
+
+
+
