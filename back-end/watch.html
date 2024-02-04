@@ -1,0 +1,122 @@
+<html>
+ <head>
+  <title>Bangle.js Accelerometer streaming</title>
+ </head>
+ <body>
+<script src="https://www.puck-js.com/puck.js"></script>
+<button id="btnConnect">Connect</button>
+<script>
+// Code to upload to Bangle.js
+
+var BANGLE_CODE = `
+Bangle.setHRMPower(1);
+Bangle.on('HRM',function(hrm) {
+    var d = [
+      "H",
+      hrm.bpm,
+      hrm.confidence
+      ];
+    Bluetooth.println(d.join(","));
+  });
+  Bangle.setGPSPower(1);
+  Bangle.on('GPS', function(fix) {
+    if (fix != undefined) { 
+    var d = [
+      "lat: ",
+      fix.lat,
+      "lon: ",
+      fix.lon
+      ];
+      Bluetooth.println(fix.fix)
+      Bluetooth.println(d.join(","));
+  }});
+`;
+
+// When we click the connect button...
+var connection;
+document.getElementById("btnConnect").addEventListener("click", function() {
+  // disconnect if connected already
+  if (connection) {
+    connection.close();
+    connection = undefined;
+  }
+  // Connect
+  Puck.connect(function(c) {
+    if (!c) {
+      alert("Couldn't connect!");
+      return;
+    }
+    connection = c;
+    // Handle the data we get back, and call 'onLine'
+    // whenever we get a line
+    var buf = "";
+    connection.on("data", function(d) {
+      buf += d;
+      var l = buf.split("\n");
+      buf = l.pop();
+      l.forEach(onLine);
+    });
+    // First, reset the Bangle
+    connection.write("reset();\n", function() {
+      // Wait for it to reset itself
+      setTimeout(function() {
+        // Now upload our code to it
+        connection.write("\x03\x10if(1){"+BANGLE_CODE+"}\n",
+          function() { console.log("Ready..."); });
+      }, 1500);
+    });
+  });
+});
+
+// When we get a line of data, check it and if it's
+// from the accelerometer, update it
+function onLine(line) {
+    console.log("RECEIVED:"+line);
+    var d = line.split(",");
+    if (d.length==3 && d[0]=="H") {
+      // we have an HR monitor reading
+      var hr_data = {
+        hr : parseInt(d[1]),
+      };
+    
+    const apiUrl = 'https://808e-2a0c-5bc0-40-2e31-a044-3f93-5d0-bfad.ngrok-free.app/api/hr';
+
+    // Data to be sent in the POST request (replace this with your actual data)
+    const postData = {
+      "hr": d[1]
+    };
+
+    // Configuring the fetch options for the POST request
+    const requestOptions = {
+      method: 'POST',
+      mode:"cors", 
+      headers: {
+      
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true', // Specify the content type as JSON if you are sending JSON data
+        // Add any other headers as needed
+      },
+      body: JSON.stringify(postData) // Convert the data to JSON format
+    };
+
+    // Sending the POST request using the fetch function
+    fetch(apiUrl, requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        // Handle the response data here
+        console.log('Response:', data);
+      })
+      .catch(error => {
+        // Handle errors here
+        console.error('Error:', error);
+      });
+      hr_data.conf = Math.min(hr_data.conf, 80)
+      var lowerBound = parseInt(hr_data.conf/100.0 * hr_data.hr)
+
+      var upperBound = parseInt((2.0-hr_data.conf/100.0) * hr_data.hr)
+          console.log(Math.random() * (upperBound - lowerBound) + lowerBound);
+        }
+  }
+</script>
+ </body>
+</html>
