@@ -4,11 +4,11 @@ export default class ScreenController {
     healthContainer.innerHTML = "";
     people.forEach((person) => {
       const newSoldierHealthInterview = document.createElement("div");
-      newSoldierHealthInterview.innerHTML = `<div class="soldier-health-overview">
+      newSoldierHealthInterview.innerHTML = `<div class="soldier-health-overview critical" id="pid_${person.pid}">
         <div class="person-name">${person.name}</div>
         <p>Heartrate: <span class="person-heartrate">${person.heart_rate}</span><img class="icon" src="./assets/heart-filled.svg"></img></p>
         <p>
-          Status: <span class="person-status good" >good</span>
+          Status: <span class="person-status critical" >good</span>
         </p>
         <p>Analysis: <span class="person-analysis">none</span></p>
     
