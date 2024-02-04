@@ -81,7 +81,6 @@ h1 {
 
 .soldier-health-overview.critical {
   order: -1;
-  transform: scale(1.05);
   background-color: rgba(255, 0, 0, 0.1);
 }
 
