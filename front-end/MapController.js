@@ -2,8 +2,8 @@ const markers = new Map();
 var soldiers = [];
 
 async function initMap() {
-  const { Map } = await google.maps.importLibrary("maps");
-  const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+  const { Map, InfoWindow } = await google.maps.importLibrary("maps");
+  const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
 
   const centerPos = {
     lat: 51.5072,
@@ -31,26 +31,34 @@ async function initMap() {
     return data;
   }
 
+  const infoWindow = new InfoWindow();
+
   const interval = setInterval(async function () {
     //TODO: set soldiers to data
 
     soldiers = await getData();
 
     soldiers.people.forEach((soldier) => {
-      if (markers.has(soldier.pid)) {
-        markers.get(soldier.pid).position = new google.maps.LatLng(
-          soldier.position.lat,
-          soldier.position.lng
-        );
-      } else {
-        markers.set(
-          soldier.pid,
-          new AdvancedMarkerElement({
-            position: soldier.pos,
-            map,
-          })
-        );
+      if(markers.has(soldier.pid)) {
+          markers.get(soldier.pid).position = new google.maps.LatLng(soldier.position.lat, soldier.position.lng);
       }
-    });
+      else {
+        const marker = new AdvancedMarkerElement({
+          position: soldier.pos,
+          title: soldier.name,
+          map
+      });
+      marker.addListener("click", ({domEvent, latLng}) => {
+        const { target } = domEvent;
+        infoWindow.close();
+        infoWindow.setContent(marker.title);
+        const personElem = document.getElementById("pid_" + soldier.pid);
+        personElem.classList.add("active");
+        console.log(personElem);
+        infoWindow.open(marker.map, marker);
+      })
+        markers.set(soldier.pid, marker);
+      }
+  });
   }, 10);
 }
