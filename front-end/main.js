@@ -42,10 +42,10 @@ function generateData() {
 
 update();
 
-const interval = setInterval(update, 1000);
+const interval = setInterval(update, 10);
 
 function update(time) {
-  fetchController
-    .getData()
-    .then((res) => screenController.renderHealthInfo(res.people));
+  fetchController.getData(true).then((res) => {
+    screenController.renderHealthInfo(res.people);
+  });
 }
