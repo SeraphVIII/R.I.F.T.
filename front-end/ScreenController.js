@@ -1,18 +1,16 @@
 export default class ScreenController {
   renderHealthInfo(people) {
-    console.log(people);
     const healthContainer = document.querySelector(".health-container");
     people.forEach((person) => {
-      console.log(person.pid);
       const soldierHealthOverview = document.querySelector(
         `#pid_${person.pid}`
       );
-      console.log(`#pid_${person.pid}`);
+
       if (!soldierHealthOverview) {
         const newSoldierHealthInterview = document.createElement("div");
-        newSoldierHealthInterview.innerHTML = `<div class="soldier-health-overview " id="pid_${
-          person.pid
-        }">
+        newSoldierHealthInterview.classList.add("soldier-health-overview");
+        newSoldierHealthInterview.id = `pid_${person.pid}`;
+        newSoldierHealthInterview.innerHTML = `
           <div class="person-name">${person.name}</div>
           <p>Heartrate: <span class="person-heartrate">${
             person.heart_rate
@@ -21,8 +19,14 @@ export default class ScreenController {
             Status: <span class="person-status ${person.status.toLowerCase()}" >${person.status.toLowerCase()}</span>
           </p>
           <p>Analysis: <span class="person-analysis">none</span></p>
-      
-        </div>`;
+`;
+        newSoldierHealthInterview.addEventListener("click", (event) => {
+          console.log(event.currentTarget);
+          document
+            .querySelectorAll(".soldier-health-overview")
+            .forEach((el) => el.classList.remove("active"));
+          event.currentTarget.classList.add("active");
+        });
         healthContainer.appendChild(newSoldierHealthInterview);
       } else {
         soldierHealthOverview.querySelector(".person-name").textContent =
