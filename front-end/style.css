@@ -34,7 +34,6 @@ body {
   padding-right: 10%;
 }
 
-
 h1 {
   color: rgb(216, 216, 216);
   font-size: 36px;
@@ -59,6 +58,31 @@ h1 {
 
   border: 2px solid white;
   border-radius: 8px;
+
+  position: relative;
+}
+
+.soldier-health-overview.critical::after {
+  content: "";
+  background-image: url("./assets/alert.svg");
+  color: white;
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.soldier-health-overview.active {
+  order: -1;
+  transform: scale(1.05);
+  background-color: rgba(102, 102, 102, 0.1);
+}
+
+.soldier-health-overview.critical {
+  order: -1;
+  transform: scale(1.05);
+  background-color: rgba(255, 0, 0, 0.1);
 }
 
 .person-name {
